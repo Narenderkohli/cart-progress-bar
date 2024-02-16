@@ -1,31 +1,43 @@
-{%- comment -%}
-----------------------------------------------------------------------------------------------------------------------
-FREE SHIPPING BAR
-----------------------------------------------------------------------------------------------------------------------
+<html>
+<head>
+  <title>Cart Progress Bar</title>
+  <style>
+    .cart-progress-bar {
+      width: 100%;
+      height: 20px;
+      background-color: #ccc;
+      border: 1px solid #000;
+    }
 
-Renders the free shipping bar component. It is used on cart page and cart drawer to render the remaining amount before
-being eligible for free shipping.
+    .cart-progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background-color: #000;
+    }
 
-********************************************
-Supported variables
-********************************************
+    #cart-total-price {
+      float: right;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="cart-progress-bar">
+    <div class="cart-progress-bar-fill" id="cart-progress-bar-fill"></div>
+  </div>
 
-* size: accept the value "sm"
-{%- endcomment -%}
+  <div id="cart-total-price">Free Shipping Avialable on the Rs 500</div>
 
-{%- liquid
-  assign calculated_total_price = 0
+  <script>
+    // Get the cart progress bar fill element
+    const cartProgressBarFill = document.getElementById('cart-progress-bar-fill');
 
-  for line_item in cart.items
-    if line_item.requires_shipping
-      assign calculated_total_price = calculated_total_price | plus: line_item.final_line_price
-    endif
-  endfor
--%}
+    // Calculate the percentage of the cart progress bar that should be filled
+    const cartTotalPrice = 100;
+    const cartProgressPercentage = (cartTotalPrice / 500) * 100;
 
-<free-shipping-bar class="free-shipping-bar" threshold="{{ settings.cart_free_shipping_threshold | times: 100.0 }}" total-price="{{ calculated_total_price }}" reached-message="{{ 'cart.free_shipping_bar.limit_reached_html' | t | escape }}" unreached-message="{{ 'cart.free_shipping_bar.limit_unreached_html' | t | escape }}">
-  {%- comment -%}The span below is the placeholder where the content will be inserted in JS{%- endcomment -%}
-  <span>&nbsp;</span>
-
-  <progress-bar class="progress-bar" role="progressbar" aria-valuemin="0" style="--progress: 0"></progress-bar>
-</free-shipping-bar>
+    // Set the width of the cart progress bar fill element to the calculated percentage
+    cartProgressBarFill.style.width = `${cartProgressPercentage}%`;
+  </script>
+</body>
+</html>
